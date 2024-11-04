@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<title>Singapore 2-hr Weather Forecast</title>
+<style>
+table {
+  width: 60%;
+  border-collapse: collapse;
+  table-layout: auto;
+  margin-left: auto;
+  margin-right: auto;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+th, td {
+  border: 1px solid #ffffff00;
+  padding: 5px;
+  text-align: center;
+}
+
+th {
+  color: #727272;
+  background-color: #78ceff5b;
+  font-weight: 500;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #3890f421; 
+}
+
+h1, h4{
+  text-align:center;
+  color:  rgb(0, 0, 0);
+  padding: 20px;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  }
+
+tr:hover{background-color: rgba(0, 115, 255, 0.237)!important;}
+
+body {
+  background: radial-gradient(circle at 50% 40%, #41b9ff75, #ffffff);
+  
+}
+
+tr:first-child th:first-child {
+  border-top-left-radius: 8px; 
+}
+tr:first-child th:last-child {
+  border-top-right-radius: 8px; 
+}
+tr:last-child td:first-child {
+  border-bottom-left-radius: 8px; 
+}
+tr:last-child td:last-child {
+  border-bottom-right-radius: 8px; 
+}
+</style>
+</head>
+<body>
+
+<h1>Singapore 2-hr Weather Forecast (Chen1Guanyu)</h1>
+<h4 id="timestring"></h4>
+<table id="weatherTable">
+    <tr>
+        <th>Area</th>
+        <th>Forecast</th>
+    </tr>
+</table>
+
+
+<script>
+fetch('https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+
+  .then(responsedata => {
+    let timestamp = responsedata.data.items[0].update_timestamp;
+    let forecasts = responsedata.data.items[0].forecasts;
+    
+    document.getElementById('timestring').textContent = 'Last updated: ' + timestamp;
+    
+    const table = document.getElementById('weatherTable');
+    forecasts.forEach(forecast => {
+      const row = table.insertRow();
+      const areaCell = row.insertCell(0);
+      const forecastCell = row.insertCell(1);
+      areaCell.textContent = forecast.area;
+      forecastCell.textContent = forecast.forecast;
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+
+ 
+</script>
+
+</body>
+</html>
